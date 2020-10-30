@@ -20,6 +20,6 @@ steps:
     location: 'North Central US'
     templateLocation: 'Linked artifact'
     csmFile: 'Azure_SQLDB/azuresqldb - Copy08282020.json'
-    overrideParameters: '-projectName ARM_TEMPLATE_DEVOPS -https://github.com/mkzk786/ARM_TEMPLATE_DEPLOY/blob/master/Azure_SQLDB/azuresqldb%20-%20Copy08282020.json'
+    overrideParameters: '-projectName ARM_TEMPLATE_DEVOPS - linkedTemplateUri https://github.com/mkzk786/ARM_TEMPLATE_DEPLOY/blob/master/Azure_SQLDB/azuresqldb%20-%20Copy08282020.json'
     deploymentMode: 'Incremental'
     deploymentName: 'DEVOPS_PIPELINE_SQLARM_DEPLOYMENT'
