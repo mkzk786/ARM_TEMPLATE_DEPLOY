@@ -1,0 +1,105 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {"sqlserverAdministratorLogin": {
+        "type": "string",
+        "metadata": {
+            "description": "The administrator username of the SQL Server"
+        }
+        },
+        "sqlserverAdministratorLoginPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The administrator password of the SQL Server"
+            }
+        },
+        "sqlserverName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the SQL Server"
+            }
+        },
+        "DatabaseName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Azure SQL server Database"
+            }
+        },
+        "DatabaseServiceObjectiveName": {
+            "type": "string",
+            "defaultValue" : "Basic",
+            "allowedValues" : [
+            "Basic",
+             "S0",
+             "S1",
+             "S2",
+             "S3"],
+             "metadata": {
+                "description": "Database tier/sku for Azure SQL database"
+            }
+
+        },
+        "DatabaseEdition": {
+            "type": "string",
+            "defaultValue": "Basic",
+            "allowedValues" : [
+             "Basic",
+             "Standard"
+              ],
+
+            "metadata": {
+                "description": "Edition of Azure SQL database Being created"
+            }
+        }
+        
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [{
+        "type": "Microsoft.Sql/servers",
+        "name": "[parameters('sqlserverName')]",
+        "apiVersion": "2014-04-01",
+        "location": "[resourceGroup().location]",
+        "tags": {
+        },
+        "properties": {
+            "administratorLogin": "[parameters('sqlserverAdministratorLogin')]",
+            "administratorLoginPassword": "[parameters('sqlserverAdministratorLoginPassword')]"
+        },
+        "resources": [
+            {
+                "type": "firewallRules",
+                "apiVersion": "2014-04-01",
+                "dependsOn": [
+                    "[concat('Microsoft.sql/servers/',parameters('sqlserverName'))]"
+                ],
+                "location": "[resourceGroup().location]",
+                "name": "AllowAllWindowsAzureIps",
+                "properties": {
+                    "startIpAddress": "0.0.0.0",
+                    "endIpAddress": "0.0.0.0"
+                }
+            }
+        ]
+    },
+    
+    {
+        "type": "Microsoft.Sql/servers/databases",
+        "name": "[concat(parameters('sqlServerName'), '/', parameters('databaseName'))]",
+        "apiVersion": "2014-04-01",
+        "location": "[resourceGroup().location]",
+        "tags": {
+        
+        },
+        "dependsOn": [
+            "[concat('Microsoft.sql/servers/',parameters('sqlserverName'))]"
+        ],
+        "properties": {
+            "collation": "SQL_Latin1_General_CP1_CI_AS",
+            "edition": "[parameters('DatabaseEdition')]",
+            "createMode": "Default",
+            "requestedServiceObjectiveName": "[parameters('DatabaseServiceObjectiveName')]"
+        }
+    }],
+    "outputs": {}
+}
