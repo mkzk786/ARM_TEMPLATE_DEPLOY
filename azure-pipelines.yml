@@ -1,0 +1,25 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'ARM_Tmp_Pipeline-conn'
+    subscriptionId: '8aad183c-09e4-4150-9764-5d4e01233415'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'Azure_ARM_Pipeline'
+    location: 'North Central US'
+    templateLocation: 'Linked artifact'
+    csmFile: 'Azure_SQLDB/azuresqldb - Copy08282020.json'
+    overrideParameters: '-projectName ARM_TEMPLATE_DEVOPS -https://github.com/mkzk786/ARM_TEMPLATE_DEPLOY/blob/master/Azure_SQLDB/azuresqldb%20-%20Copy08282020.json'
+    deploymentMode: 'Incremental'
+    deploymentName: 'DEVOPS_PIPELINE_SQLARM_DEPLOYMENT'
